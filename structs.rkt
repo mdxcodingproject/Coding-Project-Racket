@@ -21,15 +21,20 @@
                               (set! fan-list (cons new_account fan-list))))))
     (else (message-box "Warning" "Invalid Argument(s)! All text fields must be filled!\n"))))
 
+
+(define registration-status #f)
+
 (define (check-registration-status id radio-selection)
+  (printf "~a ~a\n" id radio-selection)
+  (set! registration-status #f)
   (cond
-    ((equal? radio-selection 0)
+    ((and (equal? radio-selection 0) (number? id))
      (for ([i band-list])
-       (equal? id (band-user-struct-ID i)) #t))
-    ((equal? radio-selection 1)
+       (equal? id (band-user-struct-ID i)) (set! registration-status #t) (printf "reg stat: ~a\n" registration-status)))
+    ((and(equal? radio-selection 1) (number? id))
      (for ([i fan-list])
-       (equal? id (fan-user-struct-ID i)) #t))
-    (else #f)))
+       (equal? id (fan-user-struct-ID i)) (set! registration-status #t)))
+    (else (set! registration-status #f) (displayln "test\n"))))
 
 
 (define (get-account-password struct-name account-type)

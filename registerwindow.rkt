@@ -32,8 +32,9 @@
                                                (password (string->number (send user-password-field get-value)))
                                                (user-type (send app-radio-button get-selection))) ; Bind the user type
                                           (create-account name surname id password user-type) ; Call create-account after bindings
+                                          (check-registration-status id user-type)
                                           (cond
-                                           ((check-registration-status id user-type)(message-box "Warning" (format "Account Has Been Created \nAccount ID: ~a" id)))
+                                           ((equal? registration-status #t)(message-box "Warning" (format "Account Has Been Created \nAccount ID: ~a" id)))
                                            (else "Not registered"))
                                           (send new-window show #f)))]))
   (send new-window show #t))
