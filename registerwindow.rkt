@@ -1,6 +1,5 @@
 #lang racket/gui
 (require "structs.rkt")
-
 ;(define (register-user user-input-id user-group-selection)
 ;  (define (register-user-succesful)
 ;    (message-box "Warning" "Account Created Succesfully"))
