@@ -17,14 +17,13 @@
   ;pane and group-box for fan and band
   (define vertical-pane-band (new vertical-pane% [parent horizontal-pane-bottom]))
   (define band-group-box (new group-box-panel% [parent vertical-pane-band] [label ""]))
-  
   (define vertical-pane-fan (new vertical-pane% [parent horizontal-pane-bottom]))
   (define fan-group-box (new group-box-panel% [parent vertical-pane-fan] [label ""]))
   
   (define registration-button-main-window (new button% [label "Registration"][parent horizontal-pane-top][stretchable-width #t][min-height 100] [min-width 100][horiz-margin (/ window-width 4)]
                                                [callback (lambda (button event) (open-registration-window))]))
   (define signin-button-main-window (new button% [label "Password Reset"][parent horizontal-pane-top][stretchable-width #t][min-height 100][min-width 100][horiz-margin (/ window-width 4)]
-                                         [callback (lambda (button event) (password-reset))]))
+                                         [callback (lambda (button event) (password-reset-screen))]))
   
 
   (define band-id-text-field (new text-field% [label ""] [parent band-group-box]))
@@ -41,7 +40,7 @@
                                                                                               (authenticate-user (string->number (send fan-id-text-field get-value))
                                                                                                                  (string->number (send fan-password-text-field get-value)) 1)
                                                                                               (cond
-                                                                                                ((equal? login-status #t) (send main-window-screen-frame show #f))))])) ; method will be changed -> destroy firstscreen and open new window
+                                                                                                ((equal? login-status 1) (send main-window-screen-frame show #f))))])) ; method will be changed -> destroy firstscreen and open new window
 
   (send band-id-text-field set-value "Band ID")
   (send band-password-text-field set-value "Band Password")
@@ -49,10 +48,6 @@
   
   (send fan-id-text-field set-value "Fan ID")
   (send fan-password-text-field set-value "Fan Password"))
-
-
-;
-
 
 
 
