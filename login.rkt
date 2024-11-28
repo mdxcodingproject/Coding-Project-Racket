@@ -1,11 +1,10 @@
 #lang racket/gui
 (require "structs.rkt")
 (define login-status 0)
-;(struct band-user-struct (name surname ID password) #:mutable)
-;(struct fan-user-struct (name surname ID password) #:mutable)
 (define (test-loop)
   (for ([i band-list])
-    (printf "~a\n" (get-account-password i 0))))
+    (printf "pass:~a id:~a\n" (get-account-password i 0) (get-account-id i 0))))
+
 
 (define (authenticate-user user-id user-pass account-type)
   (let ([flag 0])
