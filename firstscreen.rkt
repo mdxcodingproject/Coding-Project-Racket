@@ -2,6 +2,7 @@
 (require "registerwindow.rkt")
 (require "login.rkt")
 (require "clear-screen.rkt")
+(require "passwordreset.rkt")
 (define window-width 800)
 (define window-height 400)
 (define main-window-screen-frame (new frame% [label "Concert App"] [width window-width] [height window-height]))
@@ -20,8 +21,10 @@
   (define vertical-pane-fan (new vertical-pane% [parent horizontal-pane-bottom]))
   (define fan-group-box (new group-box-panel% [parent vertical-pane-fan] [label ""]))
   
-  (define registration-button-main-window (new button% [label "Registration"][parent horizontal-pane-top][stretchable-width #t][min-height 100] [min-width 100][horiz-margin (/ window-width 4)][callback (lambda (button event) (open-registration-window))]))
-  (define signin-button-main-window (new button% [label "Password Reset"][parent horizontal-pane-top][stretchable-width #t][min-height 100][min-width 100][horiz-margin (/ window-width 4)][callback (lambda (button event) (displayln "Test2"))]))
+  (define registration-button-main-window (new button% [label "Registration"][parent horizontal-pane-top][stretchable-width #t][min-height 100] [min-width 100][horiz-margin (/ window-width 4)]
+                                               [callback (lambda (button event) (open-registration-window))]))
+  (define signin-button-main-window (new button% [label "Password Reset"][parent horizontal-pane-top][stretchable-width #t][min-height 100][min-width 100][horiz-margin (/ window-width 4)]
+                                         [callback (lambda (button event) (password-reset))]))
   
 
   (define band-id-text-field (new text-field% [label ""] [parent band-group-box]))

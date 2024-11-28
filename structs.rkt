@@ -1,23 +1,27 @@
 #lang racket/gui
-(struct band-user-struct (name surname ID password) #:mutable)
-(struct fan-user-struct (name surname ID password) #:mutable)
+(struct band-user-struct (name surname ID password secret-answer) #:mutable)
+(struct fan-user-struct (name surname ID password secret-answer) #:mutable)
 
-(define test-acc(band-user-struct "Ugur" "Ersoy" 123 123))
-(define test-acc2(band-user-struct "Murat" "Ersoy" 345 567))
+(define test-acc(band-user-struct "Ugur" "Ersoy" 123 123 "oyku"))
+(define test-acc2(band-user-struct "Murat" "Ersoy" 345 567 "firuze"))
 
-(define fan-test-acc (fan-user-struct "Alice" "Johnson" 6969 5252))
-(define fan-test-acc2 (fan-user-struct "Bob" "Smith" 3152 3131))
+
+;(printf "SA: ~a\n"(band-user-struct-secret-answer test-acc))
+
+
+(define fan-test-acc (fan-user-struct "Alice" "Johnson" 6969 5252 "ugur"))
+(define fan-test-acc2 (fan-user-struct "Bob" "Smith" 3152 3131 "ersoy"))
 
 (define band-list(list test-acc test-acc2))
 (define fan-list(list fan-test-acc fan-test-acc2))
 
-(define (create-account name surname id password radiobutton)
+(define (create-account name surname id password radiobutton secret-answer)
   (cond
     ((and name surname id password radiobutton)
      (cond
-       ((equal? radiobutton 0) (let ((new_account (band-user-struct name surname id password)))
+       ((equal? radiobutton 0) (let ((new_account (band-user-struct name surname id password secret-answer)))
                               (set! band-list (cons new_account band-list))))
-       ((equal? radiobutton 1) (let ((new_account (fan-user-struct name surname id password)))
+       ((equal? radiobutton 1) (let ((new_account (fan-user-struct name surname id password secret-answer)))
                               (set! fan-list (cons new_account fan-list))))))
     (else (message-box "Warning" "Invalid Argument(s)! All text fields must be filled!\n"))))
 
@@ -48,6 +52,12 @@
     ((equal? account-type 0) (band-user-struct-ID struct-name))
     ((equal? account-type 1) (fan-user-struct-ID struct-name))
   (else (displayln "Error id"))))
+
+(define (get-account-secret-answer struct-name account-type)
+  (cond
+    ((equal? account-type 0) (band-user-struct-secret-answer struct-name))
+    ((equal? account-type 1) (fan-user-struct-secret-answer struct-name))
+  (else (displayln "Error Secret Answer not Found"))))
 
 (provide (all-defined-out))
 
