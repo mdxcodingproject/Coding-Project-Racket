@@ -23,13 +23,6 @@
   (define passreset-radio-button (new radio-box% [parent password-reset-frame] [label ""] [choices (list "Band" "Fan")]))
   (define user-id-preset-text-field (new text-field% [parent password-reset-frame] [label "User ID"]))
   (define secret-answer-text-field (new text-field% [parent password-reset-frame] [label "Secret Answer"]))
-  ; (define request-reset-button (new button% [parent password-reset-frame] [label "Request Reset"] [callback (lambda (button event)
-  ;                                                                                                            (let ([user-secret-ans (send secret-answer-text-field get-value)]
-  ;                                                                                                                   [acc-type (send passreset-radio-button get-selection)]
-  ;                                                                                                                   (user-id (string->number(send user-id-preset-text-field get-value))))
-  ;                                                                                                               (find-secret-answer user-id user-secret-ans acc-type)))]))
-                                                                                                                   
-
   (define new-password-text-field (new text-field% [parent password-reset-frame] [label "New Password"]))
   (define reset-button (new button% [parent password-reset-frame] [label "Submit Request"] [callback (lambda (button event)
                                                                                                        (let ([new-pass (send new-password-text-field get-value)]
@@ -47,9 +40,9 @@
                                                                                                           
 
 
-   (send user-id-preset-text-field set-value "123")
-  (send secret-answer-text-field set-value "oyku")
-  (send new-password-text-field set-value "706")
+;  (send user-id-preset-text-field set-value "123")
+;  (send secret-answer-text-field set-value "test")
+;  (send new-password-text-field set-value "706")
 
   
   (send password-reset-frame show #t))

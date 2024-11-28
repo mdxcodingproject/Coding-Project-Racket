@@ -1,12 +1,14 @@
 #lang racket/gui
 (require "structs.rkt")
 (define login-status 0)
+
+;test loop will be deleted
 (define (test-loop)
   (for ([i band-list])
     (printf "pass:~a id:~a\n" (get-account-password i 0) (get-account-id i 0))))
 
-
 (define (authenticate-user user-id user-pass account-type)
+  (set! login-status 0) ; if band/fan exits from their account and try to login in a different account this is to avoid a bug. 
   (let ([flag 0])
     (cond
       ((equal? account-type 0)
@@ -21,6 +23,4 @@
       (else (set! login-status 0)))
     (cond
       ((equal? flag 0) (message-box "Warning" "Password/ID is wrong\n")))))
-
-
 (provide (all-defined-out))
