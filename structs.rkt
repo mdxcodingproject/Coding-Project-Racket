@@ -41,6 +41,27 @@
     (else (set! registration-status #f) (displayln "test\n"))))
 
 
+;set functions
+(define (set-account-password userid new-pass acc-type)
+  (let ([old-password 0])
+    (cond
+      ((and (equal? acc-type 0) (number? userid))
+       (for ([i band-list])
+         (cond
+           ((equal? userid (band-user-struct-ID i)) (set! old-password (band-user-struct-password i)) (set-band-user-struct-password! i (string->number new-pass))
+                                                    (message-box "Warning" (format "Old Password: ~a\nNew Paasword: ~a\n Band Name: ~a\nBand ID: ~a/~a" old-password (band-user-struct-password i) (band-user-struct-name i) (band-user-struct-ID i) userid)))))))
+    (cond
+      ((and (equal? acc-type 1) (number? userid))
+       (for ([i fan-list])
+         (cond
+           ((equal? userid (fan-user-struct-ID i)) (set! old-password (fan-user-struct-password i)) (set-fan-user-struct-password! i new-pass)
+                                                   (message-box "Warning" (format "Old Password: ~a\nNew Paasword: ~a\n Fan Name: ~a\nFan ID: ~a/~a" old-password new-pass (fan-user-struct-name i) (fan-user-struct-ID i) userid))))))
+      (else
+       (cond
+         ((not (number? userid)) (message-box "Warning" (printf "ID must be a number!"))))))))
+
+
+;get functions
 (define (get-account-password struct-name account-type)
   (cond
     ((equal? account-type 0) (band-user-struct-password struct-name))
