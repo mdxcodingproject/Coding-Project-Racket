@@ -4,6 +4,7 @@
 (require "clear-screen.rkt")
 (require "passwordreset.rkt")
 (require "band-login-screen.rkt")
+; şifre sıfırlama çalışmıyor
 ;(require "structs.rkt")
 (define is-screen-on 0)
 (define window-width 800)
@@ -36,8 +37,8 @@
   (define fan-id-text-field (new text-field% [label ""] [parent fan-group-box]))
   (define fan-password-text-field (new text-field% [label ""] [parent fan-group-box]))
   (define band-login-button(new button% [parent band-group-box] [label "Band Login"] [callback (lambda (button event)
-                                                                                                 (authenticate-user (string->number (send band-id-text-field get-value))
-                                                                                                                    (string->number (send band-password-text-field get-value)) 0)
+                                                                                                 (authenticate-user (send band-id-text-field get-value)
+                                                                                                                    (send band-password-text-field get-value) 0)
                                                                                                  (cond
                                                                                                    ((equal? login-status 1)
                                                                                                     (send main-window-screen-frame show #f) (band-menu))))]))
