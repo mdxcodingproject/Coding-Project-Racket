@@ -2,16 +2,16 @@
 (struct band-user-struct (name surname ID password secret-answer acc-type) #:mutable #:transparent)
 (struct fan-user-struct (name surname ID password secret-answer acc-type) #:mutable)
 ;(struct logged-in-struct (ID acc-type) #:mutable #:transparent)
-(struct band-listing-struct(concertID bandName date time venue cost bookStatus) #:mutable #:transparent)
+(struct band-listing-struct(concertID bandID bandName date time venue cost bookStatus) #:mutable #:transparent)
 ;(struct band-listings ()
 ; Band and fan test account will be deleted
-(define test-acc(band-user-struct "Ugur" "Ersoy" 123 123 "test" 0))
-(define test-acc2(band-user-struct "Murat" "Ersoy" 345 345 "test2" 0))
-(define fan-test-acc (fan-user-struct "Alice" "Johnson" 6969 5252 "test" 1))
-(define fan-test-acc2 (fan-user-struct "Bob" "Smith" 3152 3131 "test2" 1))
-(define listing-test (band-listing-struct "11636" "Ugur1" "13.05.2025" "14:00" "High Street London" "24.99$" "Yes"))
-(define listing-test2 (band-listing-struct "12521" "Ugur2" "14.05.2025" "14:55" "Street London" "24.92$" "Yes"))
-(define listing-test3 (band-listing-struct "12345" "Ugur3" "12.05.2025" "15:00" "5igh Street London" "33.99$" "No"))
+(define test-acc(band-user-struct "Ugur" "Ersoy" "123" "123" "test" 0))
+(define test-acc2(band-user-struct "Murat" "Ersoy" "345" "345" "test2" 0))
+(define fan-test-acc (fan-user-struct "Alice" "Johnson" "6969" "5252" "test" 1))
+(define fan-test-acc2 (fan-user-struct "Bob" "Smith" "3152" "3131" "test2" 1))
+(define listing-test (band-listing-struct "11636" "123" "Ugur" "13.05.2025" "14:00" "High Street London" "24.99$" "Yes"))
+(define listing-test2 (band-listing-struct "12521" "123" "Ugur" "14.05.2025" "14:55" "Street London" "24.92$" "Yes"))
+(define listing-test3 (band-listing-struct "12345" "123" "Ugur" "12.05.2025" "15:00" "5igh Street London" "33.99$" "No"))
 
 ;(define test-logged-in (logged-in-struct (band-user-struct-ID test-acc) (band-user-struct-acc-type test-acc)))
 
@@ -22,7 +22,7 @@
 (define fan-list(list fan-test-acc fan-test-acc2))
 (define logged-in-acc(list))
 ;(define listed-concerts(list listing-test listing-test2 listing-test3))
-(define listed-concerts(list))
+(define listed-concerts(list listing-test listing-test2 listing-test3))
 
 ; creates account by invoking band or fan struct. As list isn't mutable it creates a new list and assigns it to our band or fan-list variable.
 ; after it is only read-only but you can change what its pointing at (const char list[2]); -> read-only (const char const idf) -> read only + idf cannot be setted
@@ -45,11 +45,11 @@
                                  (set! fan-list (cons new_account fan-list))))))
     (else (message-box "Warning" "Invalid Argument(s)! All text fields must be filled!\n"))))
 
-(define (create-concert-listing bandid name date time venue cost bookStatus)
+(define (create-concert-listing concertID bandid name date time venue cost bookStatus)
   (cond
     ((and bandid name date time venue cost)
-     (set! bandid (number->string (generate-random-uid)))
-     (let ((new-concert (band-listing-struct bandid name date time venue cost "No")))
+     (set! concertID (number->string (generate-random-uid)))
+     (let ((new-concert (band-listing-struct concertID bandid name date time venue cost bookStatus)))
        (set! listed-concerts (cons new-concert listed-concerts))))))
 
 (define registration-status 0)
@@ -71,37 +71,49 @@
 (define (set-account-password userid new-pass acc-type)
   (let ([old-password 0])
     (cond
-      ((and (equal? acc-type 0) (number? userid))
+      ((and (equal? acc-type 0) (string? userid))
        (for ([i band-list])
          (cond
-           ((equal? userid (band-user-struct-ID i)) (set! old-password (band-user-struct-password i)) (set-band-user-struct-password! i (string->number new-pass))
+           ((equal? userid (band-user-struct-ID i)) (set! old-password (band-user-struct-password i)) (set-band-user-struct-password! i new-pass)
                                                     (message-box "Warning" (format "Old Password: ~a\nNew Paasword: ~a\n Band Name: ~a\nBand ID: ~a/~a" old-password (band-user-struct-password i) (band-user-struct-name i) (band-user-struct-ID i) userid)))))))
     (cond
-      ((and (equal? acc-type 1) (number? userid))
+      ((and (equal? acc-type 1) (string? userid))
        (for ([i fan-list])
          (cond
            ((equal? userid (fan-user-struct-ID i)) (set! old-password (fan-user-struct-password i)) (set-fan-user-struct-password! i new-pass)
                                                    (message-box "Warning" (format "Old Password: ~a\nNew Paasword: ~a\n Fan Name: ~a\nFan ID: ~a/~a" old-password (fan-user-struct-password i) (fan-user-struct-name i) (fan-user-struct-ID i) userid))))))
       (else
        (cond
-         ((not (number? userid)) (message-box "Warning" (printf "ID must be a number!"))))))))
+         ((not (string? userid)) (message-box "Warning" (printf "ID must be a number!"))))))))
 
-;;uid ve structtan gelen id aynı türden değiş sanırım kontrol et
 (define (set-date-time uid new-date new-time)
   (printf "Setdate>  ~a ~a ~a\n" uid new-date new-time)
   (for
       ([i listed-concerts])
-    (printf "setdate test> ~a ~a\n" uid (band-listing-struct-concertID i)) 
     (cond
-      ((eq? (string->number uid) (band-listing-struct-concertID i))
-       (printf "Setdate2> structs>~a ~a ~a\n" uid new-date new-time)
+      ((and (equal? uid (band-listing-struct-concertID i)) (equal? (band-listing-struct-bandID i) id-holder))
+       (printf "Setdate2> structs>~a ~a ~a\n" uid (band-listing-struct-date i)(band-listing-struct-time i))
        (set-band-listing-struct-date! i new-date)
        (set-band-listing-struct-time! i new-time)
        (printf "Setdate3> structs>~a ~a ~a \n" uid (band-listing-struct-date i)(band-listing-struct-time i))
-       ))))
+       (message-box "Information" "Time/Date change(s) has been made!"))
+      (else (message-box "Warning" "Concert ID and BandID mismatch")))))
+(define (set-new-price uid new-price)
+  (let ([flag 0])
+  (for
+      ([i listed-concerts])
+    (cond
+      ((and (equal? uid (band-listing-struct-concertID i)) (equal? (band-listing-struct-bandID i) id-holder))
+       (printf "Setprice2> ~a ~a\n " uid (band-listing-struct-cost i))
+       (set-band-listing-struct-cost! i new-price) (set! flag 1)
+       (message-box "Information" "Price has been changed")
+      (printf "Setprice3> ~a ~a " uid (band-listing-struct-cost i)))))
+    (cond
+      ((equal? flag 0)
+      (message-box "Warning" "Concert ID and BandID mismatch")))))
 
 (define (set-logged-in-acc st-name)
-   (set! logged-in-acc (cons st-name logged-in-acc)))
+  (set! logged-in-acc (cons st-name logged-in-acc)))
 
 (define (set-login-empty)
   (set! logged-in-acc '()))
@@ -135,23 +147,23 @@
 (define name-holder "test_name")
 (define (get-logged-acc-dets)
   (let ([flag 0])
-  (cond
-    ((for
-         ([i logged-in-acc])
-       (cond
-         ((band-user-struct? i)
-       (for
-           ([k band-list])
+    (cond
+      ((for
+           ([i logged-in-acc])
          (cond
-         ((equal? (band-user-struct-ID i) (band-user-struct-ID k))(set! id-holder (band-user-struct-ID k)) (set! name-holder (band-user-struct-name k)) (set! flag 1)) )))))))
+           ((band-user-struct? i)
+            (for
+                ([k band-list])
+              (cond
+                ((equal? (band-user-struct-ID i) (band-user-struct-ID k))(set! id-holder (band-user-struct-ID k)) (set! name-holder (band-user-struct-name k)) (set! flag 1)) )))))))
     (cond
       ((and (eq? flag 0)
             (for
-                 ([i logged-in-acc])
-               (for
-                   ([k fan-list])
-                 (cond
-                 ((equal? (fan-user-struct-ID i) (fan-user-struct-ID k)) (set! name-holder (fan-user-struct-name k)) (set! id-holder (fan-user-struct-ID k)))))))))))
+                ([i logged-in-acc])
+              (for
+                  ([k fan-list])
+                (cond
+                  ((equal? (fan-user-struct-ID i) (fan-user-struct-ID k)) (set! name-holder (fan-user-struct-name k)) (set! id-holder (fan-user-struct-ID k)))))))))))
      
 
 
