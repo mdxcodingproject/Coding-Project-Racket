@@ -2,16 +2,16 @@
 (struct band-user-struct (name surname ID password secret-answer acc-type) #:mutable #:transparent)
 (struct fan-user-struct (name surname ID password secret-answer acc-type) #:mutable)
 ;(struct logged-in-struct (ID acc-type) #:mutable #:transparent)
-(struct band-listing-struct(concertID bandID bandName date time venue cost bookStatus) #:mutable #:transparent)
+(struct band-listing-struct(concertID bandID bandName date time venue cost seat) #:mutable #:transparent)
 ;(struct band-listings ()
 ; Band and fan test account will be deleted
 (define test-acc(band-user-struct "Ugur" "Ersoy" "123" "123" "test" 0))
 (define test-acc2(band-user-struct "Murat" "Ersoy" "345" "345" "test2" 0))
 (define fan-test-acc (fan-user-struct "Alice" "Johnson" "6969" "5252" "test" 1))
 (define fan-test-acc2 (fan-user-struct "Bob" "Smith" "3152" "3131" "test2" 1))
-(define listing-test (band-listing-struct "11636" "123" "Ugur" "13.05.2025" "14:00" "High Street London" "24.99$" "Yes"))
-(define listing-test2 (band-listing-struct "12521" "123" "Ugur" "14.05.2025" "14:55" "Street London" "24.92$" "Yes"))
-(define listing-test3 (band-listing-struct "12345" "123" "Ugur" "12.05.2025" "15:00" "5igh Street London" "33.99$" "No"))
+(define listing-test (band-listing-struct "11636" "123" "Ugur" "13.05.2025" "14:00" "High Street London" "24.99$" "30"))
+(define listing-test2 (band-listing-struct "12521" "123" "Ugur" "14.05.2025" "14:55" "Street London" "24.92$" "15"))
+(define listing-test3 (band-listing-struct "12345" "123" "Ugur" "12.05.2025" "15:00" "5igh Street London" "33.99$" "FULL"))
 
 ;(define test-logged-in (logged-in-struct (band-user-struct-ID test-acc) (band-user-struct-acc-type test-acc)))
 
@@ -45,11 +45,11 @@
                                  (set! fan-list (cons new_account fan-list))))))
     (else (message-box "Warning" "Invalid Argument(s)! All text fields must be filled!\n"))))
 
-(define (create-concert-listing concertID bandid name date time venue cost bookStatus)
+(define (create-concert-listing concertID bandid name date time venue cost seatleft)
   (cond
-    ((and bandid name date time venue cost)
+    ((and bandid name date time venue cost seatleft)
      (set! concertID (number->string (generate-random-uid)))
-     (let ((new-concert (band-listing-struct concertID bandid name date time venue cost bookStatus)))
+     (let ((new-concert (band-listing-struct concertID bandid name date time venue cost seatleft)))
        (set! listed-concerts (cons new-concert listed-concerts))))))
 
 (define registration-status 0)
@@ -68,6 +68,37 @@
 
 
 ;set functions
+(define (set-seat uid new-seat)
+  (for
+      ([i listed-concerts])
+    (cond
+      ((and (equal? uid (band-listing-struct-concertID i)) (equal? (band-listing-struct-bandID i) id-holder))
+       (printf "SeatLeft>struct> ~a ~a ~a\n" uid new-seat (band-listing-struct-seat i))
+       (cond
+         ((equal? (string->number new-seat) 0)
+       (set-band-listing-struct-seat!  i "FULLY BOOKED")
+       (message-box "Information" "Seat List has been updated!"))
+       (else
+        {set-band-listing-struct-seat! i new-seat}
+        (message-box "Information" "Seat List has been updated!")))))))
+(define (cancel-concert uid)
+  (let ([flag 0])
+  (for
+      ([i listed-concerts])
+    (cond
+      ((and (equal? uid (band-listing-struct-concertID i)) (equal? (band-listing-struct-bandID i) id-holder))
+       (set-band-listing-struct-seat! i "CANCELLED")
+       (set-band-listing-struct-cost! i "CANCELLED")
+       (set-band-listing-struct-venue! i "CANCELLED")
+       (set-band-listing-struct-date! i "CANCELLED")
+       (set-band-listing-struct-time! i "CANCELLED")
+       (set! flag 1)
+       (message-box "Information" "Concert has been cancelled!"))))
+    (cond
+      ((equal? flag 0)
+       (message-box "Warning" "Concert UID is wrong or empty!")))))
+
+
 (define (set-account-password userid new-pass acc-type)
   (let ([old-password 0])
     (cond
@@ -87,17 +118,20 @@
          ((not (string? userid)) (message-box "Warning" (printf "ID must be a number!"))))))))
 
 (define (set-date-time uid new-date new-time)
-  (printf "Setdate>  ~a ~a ~a\n" uid new-date new-time)
+  (let ([flag 0])
   (for
       ([i listed-concerts])
     (cond
       ((and (equal? uid (band-listing-struct-concertID i)) (equal? (band-listing-struct-bandID i) id-holder))
        (printf "Setdate2> structs>~a ~a ~a\n" uid (band-listing-struct-date i)(band-listing-struct-time i))
        (set-band-listing-struct-date! i new-date)
+       (set! flag 1)
        (set-band-listing-struct-time! i new-time)
        (printf "Setdate3> structs>~a ~a ~a \n" uid (band-listing-struct-date i)(band-listing-struct-time i))
-       (message-box "Information" "Time/Date change(s) has been made!"))
-      (else (message-box "Warning" "Concert ID and BandID mismatch")))))
+       (message-box "Information" "Time/Date change(s) has been made!"))))
+      (cond
+        ((equal? flag 0) (message-box "Warning" "Concert ID and BandID mismatch")))))
+         
 (define (set-new-price uid new-price)
   (let ([flag 0])
   (for
