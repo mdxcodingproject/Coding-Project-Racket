@@ -28,7 +28,7 @@
                                                                                                        (let ([new-pass (send new-password-text-field get-value)]
                                                                                                              [user-secret-ans (send secret-answer-text-field get-value)]
                                                                                                              (acc-type (send passreset-radio-button get-selection))
-                                                                                                             (user-id (string->number(send user-id-preset-text-field get-value))))
+                                                                                                             (user-id (send user-id-preset-text-field get-value)))
                                                                                                          (printf "Reset Button> S.Ans: ~a Acc-type: ~a\n" user-secret-ans acc-type)
                                                                                                          (find-secret-answer user-id user-secret-ans acc-type)
                                                                                                          (cond
