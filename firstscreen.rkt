@@ -61,7 +61,7 @@
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 (define band-screen 0)
-
+(define listing-screen 0)
 (define (band-menu)
   (cond
     ((eq? login-status 1)
@@ -69,24 +69,31 @@
      (define dashboard-top-pane-horizontal (new horizontal-pane% [parent band-dashboard]))
      (define dashboard-bot-pane-horizontal (new horizontal-pane% [parent band-dashboard]))
   
-     (define test (new button% [label "2.1"] [parent dashboard-top-pane-horizontal][stretchable-width #t][min-height 100] [min-width 100][horiz-margin (/ window-width 4)]
+     (define create-listing-button (new button% [label "Create Band Listing"] [parent dashboard-top-pane-horizontal][stretchable-width #t][min-height 100] [min-width 100][horiz-margin (/ window-width 4)]
                        [callback (lambda (button event)
                                    (set! band-screen 1) (band-create-listings))]))
-     (define test2 (new button% [label "2.2"] [parent dashboard-top-pane-horizontal][stretchable-width #t][min-height 100] [min-width 100][horiz-margin (/ window-width 4)]))
+     (define test2 (new button% [label "Show Band Listing"] [parent dashboard-top-pane-horizontal][stretchable-width #t][min-height 100] [min-width 100][horiz-margin (/ window-width 4)]
+                        [callback (lambda (button event)
+                                    (set! listing-screen 1) (band-show-listings))]))
 
      (define go-back-button (new button% [label "GO BACK\n<<<<<<"] [parent dashboard-bot-pane-horizontal] [stretchable-width #f][min-height 100] [min-width 100]
                                  [callback (lambda (button event)
                                              (send band-dashboard show #f) (first-screen))]))
 
-  
-     ;(define db-left (new vertical-pane% [parent band-create-listing-dashboard]))
+(define (band-show-listings) ; will be implemented tomorrow
+  (cond
+    ((eq? listing-screen 1)
+     (define listing-dashboard (new frame% [label "Show Listing"] [width 400] [height 400]))
+     (define band-listing-lb (new list-box% [parent listing-dashboard] [label "Band Listbox"] [style (list 'single 'column-headers 'variable-columns)] [columns (list "Name" "Date" "Price")] [choices '()]))
+     (send band-listing-lb set (list (band-user-struct-name test-acc)) (list "Test") (list "test"))
+     (send listing-dashboard show #t))))
         
         
      (send band-dashboard show #t))))
-(define (band-create-listings)
+(define (band-create-listings) ; need date structure on top right -> install gregor module
   (cond
     ((eq? band-screen 1)
-     (define create-listings-frame (new frame% [label "Dashboard"] [width 600] [height 400]))
+     (define create-listings-frame (new frame% [label "Create Listings"] [width 600] [height 400]))
      (define listings-hor-top (new horizontal-pane% [parent create-listings-frame]))
      (define listings-hor-bot (new horizontal-pane% [parent create-listings-frame]))
      
@@ -96,24 +103,26 @@
      (define listings-ver-bot-left (new vertical-pane% [parent listings-hor-bot]))
      (define listings-ver-bot-right (new vertical-pane% [parent listings-hor-bot]))
      
-     (define top-left (new group-box-panel% [parent listings-ver-top-left] [label "top-left"] [stretchable-width #f] [stretchable-height #f]))
+     (define top-left (new group-box-panel% [parent listings-ver-top-left] [label ""] [stretchable-width #f] [stretchable-height #f]))
      (define band-id-message(new message% (parent top-left)[enabled #f] (label (format "Band ID: ~a Band Name: ~a"(number->string id-holder) name-holder)) [min-width 200] [min-height 0] [font (make-object font%)]))
      
      (define top-right (new group-box-panel% [parent listings-ver-top-right] [label "top-right"]))
 
 
      
-     (define bot-right (new group-box-panel% [parent listings-ver-bot-right] [label "bot-right"]))
+     (define bot-right (new group-box-panel% [parent listings-ver-bot-right] [label ""]))
      (define create-listing-button (new button% [parent bot-right] [label "Create Concert Listing"]
                                         [enabled #t] [min-width 200] [min-height 200]
                                         [callback (lambda (button event)
                                                     (displayln "not yet"))]))
-     (define bot-left (new group-box-panel% [parent listings-ver-bot-left] [label "bot-left"] [font (make-object font%)]))
+     (define bot-left (new group-box-panel% [parent listings-ver-bot-left] [label ""] [font (make-object font%)]))
      (define name-text-field (new text-field% [parent bot-left] [label "Band N."] [enabled #f]))
-     (define date-text-field (new text-field% [parent bot-left] [label "Date"]))
+     (define date-hor-pane (new horizontal-pane% [parent bot-left] [stretchable-height #f])) ; this is for date, so it can have 3 text-fields for DD, MM AND YYYY
+     (define dated-text-field (new text-field% [parent date-hor-pane] [label "Date(DD/MM/YYYY"]))
+     (define datem-text-field (new text-field% [parent date-hor-pane] [label ""]))
+     (define datey-text-field (new text-field% [parent date-hor-pane] [label ""]))
      (define loc-text-field (new text-field% [parent bot-left] [label "Location"]))
      (define price-text-field (new text-field% [parent bot-left] [label "Price"]))
-     
      
      (send name-text-field set-value name-holder)
      (send create-listings-frame show #t))))
