@@ -1,11 +1,11 @@
 #lang racket/gui
 (struct band-user-struct (name surname ID password secret-answer acc-type) #:mutable)
 (struct fan-user-struct (name surname ID password secret-answer acc-type) #:mutable)
-(struct logged-in-struct (ID acc-type) #:mutable #:transparent)
-
+(struct logged-in-struct (ID acc-type) #:mutable)
+;(struct band-listings ()
 ; Band and fan test account will be deleted
 (define test-acc(band-user-struct "Ugur" "Ersoy" 123 123 "test" 0))
-(define test-acc2(band-user-struct "Murat" "Ersoy" 345 567 "test2" 0))
+(define test-acc2(band-user-struct "Murat" "Ersoy" 345 345 "test2" 0))
 (define fan-test-acc (fan-user-struct "Alice" "Johnson" 6969 5252 "test" 1))
 (define fan-test-acc2 (fan-user-struct "Bob" "Smith" 3152 3131 "test2" 1))
 ;(define test-logged-in (logged-in (band-user-struct-ID test-acc) (band-user-struct-acc-type test-acc)))
