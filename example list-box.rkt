@@ -13,15 +13,19 @@
                  [label "Test"]
                  [style (list 'single 'column-headers 'variable-columns)]
                  [columns (list "Name" "Date" "Price")]))
+(define data (list 
+              (list "Slipknot" "13/05/2025" "25.99$")
+              (list "Metallica" "14/06/2025" "30.00$")
+              (list "Iron Maiden" "15/07/2025" "40.00$")))
 
-(define data (list (list "Slipknot")
-                   (list "13/05/2025")
-                   (list "25.99$")))
+
  
 (send table set-column-width 0 100 100 300)
 (send table set-column-width 1 100 100 300)
 (send table set-column-width 2 100 100 300)
-(send table set (list-ref data 0) (list-ref data 1) (list-ref data 2));--> Works but needs to be able to handle variable lengtho of data
+(for
+    ([i data])
+  (send table set (list (list-ref (list-ref data 0) 0)) (list (list-ref (list-ref data 0) 1)) (list (list-ref (list-ref data 0) 2))))
 ;(apply send table set data) ;--> ERROR: send: bad syntax
 
 ;(map (lambda (element)

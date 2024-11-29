@@ -1,14 +1,19 @@
 #lang racket/gui
-(struct band-user-struct (name surname ID password secret-answer acc-type) #:mutable)
+(struct band-user-struct (name surname ID password secret-answer acc-type) #:mutable #:transparent)
 (struct fan-user-struct (name surname ID password secret-answer acc-type) #:mutable)
-(struct logged-in-struct (ID acc-type) #:mutable)
+;(struct logged-in-struct (ID acc-type) #:mutable #:transparent)
+(struct band-listing-struct(concertID bandName date time venue cost bookStatus) #:mutable #:transparent)
 ;(struct band-listings ()
 ; Band and fan test account will be deleted
 (define test-acc(band-user-struct "Ugur" "Ersoy" 123 123 "test" 0))
 (define test-acc2(band-user-struct "Murat" "Ersoy" 345 345 "test2" 0))
 (define fan-test-acc (fan-user-struct "Alice" "Johnson" 6969 5252 "test" 1))
 (define fan-test-acc2 (fan-user-struct "Bob" "Smith" 3152 3131 "test2" 1))
-;(define test-logged-in (logged-in (band-user-struct-ID test-acc) (band-user-struct-acc-type test-acc)))
+(define listing-test (band-listing-struct "11636" "Ugur1" "13.05.2025" "14:00" "High Street London" "24.99$" "Yes"))
+(define listing-test2 (band-listing-struct "12521" "Ugur2" "14.05.2025" "14:55" "Street London" "24.92$" "Yes"))
+(define listing-test3 (band-listing-struct "12345" "Ugur3" "12.05.2025" "15:00" "5igh Street London" "33.99$" "No"))
+
+;(define test-logged-in (logged-in-struct (band-user-struct-ID test-acc) (band-user-struct-acc-type test-acc)))
 
 ;;;;;;;;;;;;;;
 
@@ -16,13 +21,20 @@
 (define band-list(list test-acc test-acc2))
 (define fan-list(list fan-test-acc fan-test-acc2))
 (define logged-in-acc(list))
-
+;(define listed-concerts(list listing-test listing-test2 listing-test3))
+(define listed-concerts(list))
 
 ; creates account by invoking band or fan struct. As list isn't mutable it creates a new list and assigns it to our band or fan-list variable.
 ; after it is only read-only but you can change what its pointing at (const char list[2]); -> read-only (const char const idf) -> read only + idf cannot be setted
 
 
 ;create functions
+(define (generate-random-uid)
+  
+  (random-seed (random 100000)) 
+  (define rand-uid (random 1000000))
+  rand-uid)
+
 (define (create-account name surname id password radiobutton secret-answer)
   (cond
     ((and name surname id password radiobutton)
@@ -32,6 +44,13 @@
        ((equal? radiobutton 1) (let ((new_account (fan-user-struct name surname id password secret-answer 1)))
                                  (set! fan-list (cons new_account fan-list))))))
     (else (message-box "Warning" "Invalid Argument(s)! All text fields must be filled!\n"))))
+
+(define (create-concert-listing bandid name date time venue cost bookStatus)
+  (cond
+    ((and bandid name date time venue cost)
+     (set! bandid (number->string (generate-random-uid)))
+     (let ((new-concert (band-listing-struct bandid name date time venue cost "No")))
+       (set! listed-concerts (cons new-concert listed-concerts))))))
 
 (define registration-status 0)
 
@@ -66,6 +85,20 @@
       (else
        (cond
          ((not (number? userid)) (message-box "Warning" (printf "ID must be a number!"))))))))
+
+;;uid ve structtan gelen id aynı türden değiş sanırım kontrol et
+(define (set-date-time uid new-date new-time)
+  (printf "Setdate>  ~a ~a ~a\n" uid new-date new-time)
+  (for
+      ([i listed-concerts])
+    (printf "setdate test> ~a ~a\n" uid (band-listing-struct-concertID i)) 
+    (cond
+      ((eq? (string->number uid) (band-listing-struct-concertID i))
+       (printf "Setdate2> structs>~a ~a ~a\n" uid new-date new-time)
+       (set-band-listing-struct-date! i new-date)
+       (set-band-listing-struct-time! i new-time)
+       (printf "Setdate3> structs>~a ~a ~a \n" uid (band-listing-struct-date i)(band-listing-struct-time i))
+       ))))
 
 (define (set-logged-in-acc st-name)
    (set! logged-in-acc (cons st-name logged-in-acc)))
