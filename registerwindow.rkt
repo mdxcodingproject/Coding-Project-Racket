@@ -14,11 +14,11 @@
   
   (define submit-button(new button%[parent new-window][label "Submit"]
                             [callback (lambda (button event)
-                                        (let* ((id (string->number (send user-id-field get-value)))
+                                        (let* ((id (send user-id-field get-value))
                                                (name (send user-name-field get-value))
                                                (surname (send user-surname-field get-value))
                                                (secret-answer (send user-secret-answer get-value)) 
-                                               (password (string->number (send user-password-field get-value)))
+                                               (password (send user-password-field get-value))
                                                (user-type (send app-radio-button get-selection))) 
                                           (create-account name surname id password user-type secret-answer)
                                           (check-registration-status id user-type)
