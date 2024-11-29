@@ -13,7 +13,7 @@
 (define bookStatus-list (list))
 (define band-id-list (list))
 
-(define (test-loop-band)
+(define (test-loop-band) ; will be deleted
   (for ([i listed-concerts])
     (printf "~a ~a ~a ~a ~a ~a ~a\n"
             (band-listing-struct-concertID i)
@@ -77,6 +77,9 @@
      (define edit-dets (new button% [parent hori-bot-pane] [label "Edit Details"] [min-width 200] [min-height 200]
                             [callback (lambda (button event)
                                         (edit-dets-window))]))
+     (define refresh-page (new button% [parent hori-bot-pane][label "Refresh"] [min-width 200] [min-height 200] [horiz-margin 300]
+                               [callback (lambda (button event)
+                                           (update-concert-lists band-listing-lb))]))
 
 
      (update-concert-lists band-listing-lb)
@@ -102,7 +105,7 @@
      (define listings-ver-bot-right (new vertical-pane% [parent listings-hor-bot]))
      
      (define top-left (new group-box-panel% [parent listings-ver-top-left] [label ""] [stretchable-width #f] [stretchable-height #f]))
-     (define band-id-message(new message% (parent top-left)[enabled #f] (label (format "Band ID: ~a Band Name: ~a"(number->string id-holder) name-holder)) [min-width 200] [min-height 0] [font (make-object font%)]))
+     (define band-id-message(new message% (parent top-left)[enabled #f] (label (format "Band ID: ~a Band Name: ~a" id-holder name-holder)) [min-width 200] [min-height 0] [font (make-object font%)]))
      
      (define top-right (new group-box-panel% [parent listings-ver-top-right] [label "top-right"]))
 
@@ -119,11 +122,14 @@
      (define time-text-field (new text-field% [parent bot-left] [label "Time"]))
      (define loc-text-field (new text-field% [parent bot-left] [label "Location"]))
      (define price-text-field (new text-field% [parent bot-left] [label "Price"]))
+     (define booking-status (new radio-box% [parent bot-left] [label "Bookable?"]
+       (choices (list "Yes" "No"))))
 
      (define create-listing-button (new button% [parent bot-right] [label "Create Concert Listing"]
                                         [enabled #t] [min-width 200] [min-height 200]
                                         [callback (lambda (button event)
                                                     (let* ([name (send name-text-field get-value)]
+                                                           (concertID 0)
                                                            (dated (send dated-text-field get-value))
                                                            (datem (send datem-text-field get-value))
                                                            (datey (send datey-text-field get-value))
@@ -131,7 +137,7 @@
                                                            (date-string (string-append dated"/"datem"/"datey))
                                                            (location (send loc-text-field get-value))
                                                            (price (send price-text-field get-value)))
-                                                      (create-concert-listing "333" name date-string time location price "Yes")
+                                                      (create-concert-listing concertID id-holder name date-string time location price (send booking-status get-item-label (send booking-status get-selection)))
                                                       (test-loop-band)
                                                       ))]))
      (send dated-text-field set-value "13")
