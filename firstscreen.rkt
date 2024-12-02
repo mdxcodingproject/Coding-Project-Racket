@@ -94,7 +94,7 @@
                                                    (set-fan-screen 1)(show-fan-screen))]))
      (define show-selected-concerts (new button% [label "Selected Concerts"] [parent dashboard-top-pane-hori][stretchable-width #t][min-height 100] [min-width 100][horiz-margin (/ window-width 4)]
                                          [callback (lambda (button event)
-                                                   (displayln "WIO"))]))
+                                                   (saved-concerts))]))
 
           (define go-back-button (new button% [label "GO BACK\n<<<<<<"] [parent dashboard-bot-pane-hori] [stretchable-width #f][min-height 100] [min-width 100]
                                  [callback (lambda (button event)
