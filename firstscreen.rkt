@@ -4,7 +4,8 @@
 (require "clear-screen.rkt")
 (require "passwordreset.rkt")
 (require "band-login-screen.rkt")
-; şifre sıfırlama çalışmıyor
+(require "fan-screen.rkt")
+; eğer concertID ve bandID uyuşmuyor ise edit kısmındaki butonlara basıldığında versin direkt uyarıyı. Değiştirmeye çalıştıktann sonra değil.
 ;(require "structs.rkt")
 (define is-screen-on 0)
 (define window-width 800)
@@ -43,15 +44,15 @@
                                                                                                    ((equal? login-status 1)
                                                                                                     (send main-window-screen-frame show #f) (band-menu))))]))
   (define fan-login-button(new button% [parent fan-group-box] [label "Fan Login"] [callback (lambda (button event)
-                                                                                              (authenticate-user (string->number (send fan-id-text-field get-value))
-                                                                                                                 (string->number (send fan-password-text-field get-value)) 1)
+                                                                                              (authenticate-user (send fan-id-text-field get-value)
+                                                                                                                 (send fan-password-text-field get-value) 1)
                                                                                               (cond
                                                                                                 ((equal? login-status 1)
-                                                                                                 (send main-window-screen-frame show #f))))])) ; method will be changed -> destroy firstscreen and open new window
+                                                                                                 (send main-window-screen-frame show #f) (fan-menu))))]))
   (send band-id-text-field set-value "123")
   (send band-password-text-field set-value "123")
-  (send fan-id-text-field set-value "Fan ID")
-  (send fan-password-text-field set-value "Fan Password")
+  (send fan-id-text-field set-value "3152")
+  (send fan-password-text-field set-value "3131")
   (send main-window-screen-frame show #t))
 
 
@@ -64,14 +65,14 @@
 (define (band-menu)
   (cond
     ((eq? login-status 1)
-     (define band-dashboard (new frame% [label "Dashboard"][width 400] [height 400]))
+     (define band-dashboard (new frame% [label "Band Dashboard"][width 400] [height 400]))
      (define dashboard-top-pane-horizontal (new horizontal-pane% [parent band-dashboard]))
      (define dashboard-bot-pane-horizontal (new horizontal-pane% [parent band-dashboard]))
   
      (define create-listing-button (new button% [label "Create Band Listing"] [parent dashboard-top-pane-horizontal][stretchable-width #t][min-height 100] [min-width 100][horiz-margin (/ window-width 4)]
                        [callback (lambda (button event)
                                    (set-band-screen 1) (band-create-listings))]))
-     (define test2 (new button% [label "Show Band Listing"] [parent dashboard-top-pane-horizontal][stretchable-width #t][min-height 100] [min-width 100][horiz-margin (/ window-width 4)]
+     (define show-listing (new button% [label "Show Band Listing"] [parent dashboard-top-pane-horizontal][stretchable-width #t][min-height 100] [min-width 100][horiz-margin (/ window-width 4)]
                         [callback (lambda (button event)
                                     (set-listing-screen 1)(band-show-listings))]))
 
@@ -81,8 +82,25 @@
         
         
      (send band-dashboard show #t))))
+(define (fan-menu)
+  (cond
+    ((eq? login-status 1)
+     (define fan-dashboard (new frame% [label "Fan Dashboard"] [width 400] [height 400]))
+     (define dashboard-top-pane-hori (new horizontal-pane% [parent fan-dashboard]))
+     (define dashboard-bot-pane-hori (new horizontal-pane% [parent fan-dashboard]))
 
+     (define show-listings-button (new button% [label "Show Concert Listings"] [parent dashboard-top-pane-hori][stretchable-width #t][min-height 100] [min-width 100][horiz-margin (/ window-width 4)]
+                                       [callback (lambda (button event)
+                                                   (set-fan-screen 1)(show-fan-screen))]))
+     (define show-selected-concerts (new button% [label "Selected Concerts"] [parent dashboard-top-pane-hori][stretchable-width #t][min-height 100] [min-width 100][horiz-margin (/ window-width 4)]
+                                         [callback (lambda (button event)
+                                                   (displayln "WIO"))]))
 
+          (define go-back-button (new button% [label "GO BACK\n<<<<<<"] [parent dashboard-bot-pane-hori] [stretchable-width #f][min-height 100] [min-width 100]
+                                 [callback (lambda (button event)
+                                             (send fan-dashboard show #f)(set-fan-screen 0) (set-selected-screen 0) (first-screen))]))
+
+     (send fan-dashboard show #t))))
 
 (band-create-listings) 
 (first-screen)
