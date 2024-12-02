@@ -3,12 +3,13 @@
 (define login-status 0)
 ;test loop will be deleted
 (define (test-loop)
-  (for ([i band-list])
-    (printf "pass:~a id:~a\n" (get-account-password i 0) (get-account-id i 0))))
+  (for ([i fan-list])
+    (printf "login>pass:~a id:~a\n" (get-account-password i 1) (get-account-id i 1))))
 (define (test)
   (displayln set-logged-in-acc))
 
 (define (authenticate-user user-id user-pass account-type)
+  (test-loop)
   (set-login-empty) ; empties the logged-in account list. -> this is being used by band-panel to retrieve band name and ID
   (get-logged-acc-dets)
   (set! login-status 0) ; if band/fan exits from their account and try to login in a different account this is to avoid a bug. 
