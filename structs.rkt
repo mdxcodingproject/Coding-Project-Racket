@@ -37,19 +37,18 @@
 (define logged-in-acc(list))
 ;(define listed-concerts(list listing-test listing-test2 listing-test3))
 (define listed-concerts
-  (list listing-test
-        listing-test2
-        listing-test3
-        listing-test4
-        listing-test5
-        listing-test6
-        listing-test7
-        listing-test8
-        listing-test9
-        listing-test10
-        listing-test11
-        listing-test12))
+  (list listing-test listing-test2 listing-test3 listing-test4 listing-test5 listing-test6 listing-test7 listing-test8 listing-test9 listing-test10 listing-test11 listing-test12))
 
+
+(define (remove-from-saved id)
+  (printf "structs>remove-from> ~a\n" id)
+  (cond
+    ((member id fan-selected-concerts)
+     (printf "structs>remove-from2> ~a\n" id)
+     (set! fan-selected-concerts (remove id fan-selected-concerts))
+     (printf "structs>remove-from3> ~a\n" id))))
+
+(define fan-selected-concerts (list "11636" "12345" "12521" "01234"))
 
 ; creates account by invoking band or fan struct. As list isn't mutable it creates a new list and assigns it to our band or fan-list variable.
 ; after it is only read-only but you can change what its pointing at (const char list[2]); -> read-only (const char const idf) -> read only + idf cannot hold a different var
@@ -95,6 +94,9 @@
 
 
 ;set functions
+(define (set-selected-concerts tt)
+  (set! fan-selected-concerts (cons tt fan-selected-concerts)))
+
 (define (set-seat uid new-seat)
   (for
       ([i listed-concerts])
