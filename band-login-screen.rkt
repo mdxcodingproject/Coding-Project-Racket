@@ -4,6 +4,10 @@
 (define band-screen 0)
 (define listing-screen 0)
 
+(define (set-band-screen status)
+  (set! band-screen status))
+(define (set-listing-screen status)
+  (set! listing-screen status))
 
 (define band-name-list (list))
 (define date-list (list))
@@ -27,13 +31,13 @@
 ;Set functions
 ;(band-user-struct (list-ref logged-in-acc 0))
 (define (update-concert-lists list-box)
-  (set! band-name-list (list)) ; gpt told me to clean my list box in order to not copy same concerts over and over again
+  (set! band-name-list (list)) ; GPT -> to clean my list box in order to not copy same concerts over and over again
   (set! date-list (list))
   (set! time-list (list))
   (set! venue-list (list))
   (set! cost-list (list))
   (set! bookStatus-list (list))
-  (set! band-id-list (list))
+  (set! band-id-list (list)) ; -> GPT
   
   (for ([i listed-concerts])
     (set! band-name-list (cons (band-listing-struct-bandName i) band-name-list))
@@ -47,12 +51,9 @@
   (send/apply list-box set (list band-id-list band-name-list date-list time-list venue-list cost-list bookStatus-list)))
 
 
-(define (set-band-screen status)
-  (set! band-screen status))
-(define (set-listing-screen status)
-  (set! listing-screen status))
 
-; holds concert(s) information for logged-in band 
+
+; holds concert(s) information for logged-in band -> useless after the new method
 (define concert-list-box3 (list band-name-list
                                        date-list
                                        time-list
@@ -72,7 +73,7 @@
                                   [style (list 'single 'column-headers 'variable-columns)]
                                   [columns (list "ID" "Band Name" "Date" "Time" "Location" "Price" "Seat Left")]
                                   [choices '()]))
-                                  ;[callback (lambda (lb event)(displayln "test"))]))
+     
      
      (define edit-dets (new button% [parent hori-bot-pane] [label "Edit Details"] [min-width 200] [min-height 200]
                             [callback (lambda (button event)
