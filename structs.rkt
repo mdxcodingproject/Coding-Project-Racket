@@ -9,9 +9,23 @@
 (define test-acc2(band-user-struct "Murat" "Ersoy" "345" "345" "test2" 0))
 (define fan-test-acc (fan-user-struct "Alice" "Johnson" "6969" "5252" "test" 1))
 (define fan-test-acc2 (fan-user-struct "Bob" "Smith" "3152" "3131" "test2" 1))
+
 (define listing-test (band-listing-struct "11636" "123" "Ugur" "13.05.2025" "14:00" "High Street London" "24.99$" "30"))
 (define listing-test2 (band-listing-struct "12521" "123" "Ugur" "14.05.2025" "14:55" "Street London" "24.92$" "15"))
-(define listing-test3 (band-listing-struct "12345" "123" "Ugur" "12.05.2025" "15:00" "5igh Street London" "33.99$" "FULL"))
+(define listing-test3 (band-listing-struct "12345" "123" "Ugur" "12.05.2025" "15:00" "5igh Street London" "33.99$" "20"))
+
+(define listing-test4 (band-listing-struct "23456" "124" "Ugur" "15.05.2025" "16:00" "Central Park NY" "29.99$" "25"))
+(define listing-test5 (band-listing-struct "34567" "124" "Ugur" "16.05.2025" "17:00" "Madison Square NY" "19.99$" "35"))
+(define listing-test6 (band-listing-struct "45678" "124" "Ugur" "17.05.2025" "18:00" "Broadway NY" "39.99$" "10"))
+
+(define listing-test7 (band-listing-struct "56789" "125" "Nova" "18.06.2025" "19:00" "Hyde Park London" "49.99$" "20"))
+(define listing-test8 (band-listing-struct "67890" "125" "Nova" "19.06.2025" "20:00" "Piccadilly London" "59.99$" "15"))
+(define listing-test9 (band-listing-struct "78901" "125" "Nova" "20.06.2025" "21:00" "Oxford Circus London" "69.99$" "5"))
+
+(define listing-test10 (band-listing-struct "89012" "126" "Starlight" "25.07.2025" "22:00" "Union Square SF" "49.99$" "50"))
+(define listing-test11 (band-listing-struct "90123" "126" "Starlight" "26.07.2025" "23:00" "Golden Gate SF" "59.99$" "40"))
+(define listing-test12 (band-listing-struct "01234" "126" "Starlight" "27.07.2025" "00:00" "Market Street SF" "69.99$" "30"))
+
 
 ;(define test-logged-in (logged-in-struct (band-user-struct-ID test-acc) (band-user-struct-acc-type test-acc)))
 
@@ -22,10 +36,23 @@
 (define fan-list(list fan-test-acc fan-test-acc2))
 (define logged-in-acc(list))
 ;(define listed-concerts(list listing-test listing-test2 listing-test3))
-(define listed-concerts(list listing-test listing-test2 listing-test3))
+(define listed-concerts
+  (list listing-test
+        listing-test2
+        listing-test3
+        listing-test4
+        listing-test5
+        listing-test6
+        listing-test7
+        listing-test8
+        listing-test9
+        listing-test10
+        listing-test11
+        listing-test12))
+
 
 ; creates account by invoking band or fan struct. As list isn't mutable it creates a new list and assigns it to our band or fan-list variable.
-; after it is only read-only but you can change what its pointing at (const char list[2]); -> read-only (const char const idf) -> read only + idf cannot be setted
+; after it is only read-only but you can change what its pointing at (const char list[2]); -> read-only (const char const idf) -> read only + idf cannot hold a different var
 
 
 ;create functions
@@ -146,6 +173,7 @@
       ((equal? flag 0)
       (message-box "Warning" "Concert ID and BandID mismatch")))))
 
+
 (define (set-logged-in-acc st-name)
   (set! logged-in-acc (cons st-name logged-in-acc)))
 
@@ -153,6 +181,28 @@
   (set! logged-in-acc '()))
 
 ;get functions
+(define id-holder 0)
+(define name-holder "test_name")
+(define (get-logged-acc-dets)
+  (let ([flag 0])
+    (cond
+      ((for
+           ([i logged-in-acc])
+         (cond
+           ((band-user-struct? i)
+            (for
+                ([k band-list])
+              (cond
+                ((equal? (band-user-struct-ID i) (band-user-struct-ID k))(set! id-holder (band-user-struct-ID k)) (set! name-holder (band-user-struct-name k)) (set! flag 1)) )))))))
+    (cond
+      ((and (eq? flag 0)
+            (for
+                ([i logged-in-acc])
+              (for
+                  ([k fan-list])
+                (cond
+                  ((equal? (fan-user-struct-ID i) (fan-user-struct-ID k)) (set! name-holder (fan-user-struct-name k)) (set! id-holder (fan-user-struct-ID k)))))))))))
+
 (define (get-account-password struct-name account-type)
   (cond
     ((equal? account-type 0) (band-user-struct-password struct-name))
@@ -176,29 +226,15 @@
      (equal? account-type 0) (band-user-struct-name struct-name))
     ((equal? account-type 1) (fan-user-struct-name struct-name))
     (else (displayln "Error Secret Answer not Found"))))
-
-(define id-holder 0)
-(define name-holder "test_name")
-(define (get-logged-acc-dets)
-  (let ([flag 0])
+;cmp functions
+(define cmp-uid 0)
+(define (compare-ids uid)
     (cond
       ((for
-           ([i logged-in-acc])
-         (cond
-           ((band-user-struct? i)
-            (for
-                ([k band-list])
-              (cond
-                ((equal? (band-user-struct-ID i) (band-user-struct-ID k))(set! id-holder (band-user-struct-ID k)) (set! name-holder (band-user-struct-name k)) (set! flag 1)) )))))))
-    (cond
-      ((and (eq? flag 0)
-            (for
-                ([i logged-in-acc])
-              (for
-                  ([k fan-list])
-                (cond
-                  ((equal? (fan-user-struct-ID i) (fan-user-struct-ID k)) (set! name-holder (fan-user-struct-name k)) (set! id-holder (fan-user-struct-ID k)))))))))))
-     
+          ([i listed-concerts])
+      (and (equal? uid (band-listing-struct-concertID i)) (equal? id-holder (band-listing-struct-bandID i)))
+       (set! cmp-uid 1)))
+      (else (message-box "Warning" "BandID - ConcertID mismatch"))))
 
 
 (provide (all-defined-out))
