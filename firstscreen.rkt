@@ -5,20 +5,21 @@
 (require "passwordreset.rkt")
 (require "band-login-screen.rkt")
 (require "fan-screen.rkt")
-; eğer concertID ve bandID uyuşmuyor ise edit kısmındaki butonlara basıldığında versin direkt uyarıyı. Değiştirmeye çalıştıktann sonra değil.
-;(require "structs.rkt")
 (define is-screen-on 0)
 (define window-width 800)
 (define window-height 400)
 
 
-; (define-values (screen_width screen_height) (get-display-size)) ; get screenvalues and print -> for debug delete later on
-; (printf "Screen resolution: ~a x ~a\n" screen_width screen_height)
 
 (define (first-screen)
   (define main-window-screen-frame (new frame% [label "Concert App"] [width window-width] [height window-height]))
   (define horizontal-pane-top (new horizontal-pane% [parent main-window-screen-frame]))
   (define horizontal-pane-bottom (new horizontal-pane% [parent main-window-screen-frame]))
+  
+  (define icon (make-object bitmap% "icon.png" 'png)) ; GPT
+  (cond
+    ((send icon ok?)
+      (send main-window-screen-frame set-icon icon))) ; GPT
 
   ;pane and group-box for fan and band
   (define vertical-pane-band (new vertical-pane% [parent horizontal-pane-bottom]))
@@ -49,10 +50,10 @@
                                                                                               (cond
                                                                                                 ((equal? login-status 1)
                                                                                                  (send main-window-screen-frame show #f) (fan-menu))))]))
-  (send band-id-text-field set-value "123")
-  (send band-password-text-field set-value "123")
-  (send fan-id-text-field set-value "3152")
-  (send fan-password-text-field set-value "3131")
+  (send band-id-text-field set-value "Band ID")
+  (send band-password-text-field set-value "Band Password")
+  (send fan-id-text-field set-value "Fan ID")
+  (send fan-password-text-field set-value "Fan Password")
   (send main-window-screen-frame show #t))
 
 
