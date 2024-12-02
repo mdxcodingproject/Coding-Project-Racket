@@ -51,7 +51,9 @@
   (define concert-uid-pane (new horizontal-pane% [parent edit-frame]))
   (define edit-date-button (new button% [parent hori-top-pane] [label "Time/Date"][stretchable-width #t][stretchable-height #t][min-width 150] [min-height 150]
                                 [callback (lambda (button event)
-                                            (edit-time-frame))]))
+                                            (compare-ids uid)
+                                            (cond                            
+                                            ((equal? cmp-uid 1) (edit-time-frame))))]))
   (define edit-price-button (new button% [parent hori-top-pane] [label "Price"][stretchable-width #t][stretchable-height #t][min-width 150] [min-height 150]
                                  [callback (lambda (button event)
                                              (edit-price))]))
