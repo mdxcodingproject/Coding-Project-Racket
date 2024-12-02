@@ -16,17 +16,6 @@
 (define cost-list (list))
 (define bookStatus-list (list))
 (define band-id-list (list))
-
-(define (test-loop-band) ; will be deleted
-  (for ([i listed-concerts])
-    (printf "~a ~a ~a ~a ~a ~a ~a\n"
-            (band-listing-struct-concertID i)
-            (band-listing-struct-bandName i)
-            (band-listing-struct-date i)
-            (band-listing-struct-time i)
-            (band-listing-struct-venue i)
-            (band-listing-struct-cost i)
-            (band-listing-struct-seat i))))
             
 ;Set functions
 ;(band-user-struct (list-ref logged-in-acc 0))
@@ -139,16 +128,14 @@
                                                            (location (send loc-text-field get-value))
                                                            (seat (send booking-status get-value))
                                                            (price (send price-text-field get-value)))
-                                                      (create-concert-listing concertID id-holder name date-string time location price seat)
-                                                      (test-loop-band)
-                                                      ))]))
-     (send dated-text-field set-value "13")
-     (send datem-text-field set-value "05")
-     (send datey-text-field set-value "2025")
-     (send time-text-field set-value "13:55")
-     (send booking-status set-value "100")
-     (send loc-text-field set-value "London")
-     (send price-text-field set-value "24.99$")
+                                                      (create-concert-listing concertID id-holder name date-string time location price seat)))]))
+;     (send dated-text-field set-value "13")
+;     (send datem-text-field set-value "05")
+;     (send datey-text-field set-value "2025")
+;     (send time-text-field set-value "13:55")
+;     (send booking-status set-value "100")
+;     (send loc-text-field set-value "London")
+;     (send price-text-field set-value "24.99$")
      ;(define (create-concert-listing bandid name date time venue cost bookStatus)
      
      (send name-text-field set-value name-holder)
