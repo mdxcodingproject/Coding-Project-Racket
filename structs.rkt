@@ -1,8 +1,8 @@
 #lang racket/gui
-(struct band-user-struct (name surname ID password secret-answer acc-type) #:mutable #:transparent)
+(struct band-user-struct (name surname ID password secret-answer acc-type) #:mutable)
 (struct fan-user-struct (name surname ID password secret-answer acc-type) #:mutable)
 ;(struct logged-in-struct (ID acc-type) #:mutable #:transparent)
-(struct band-listing-struct(concertID bandID bandName date time venue cost seat) #:mutable #:transparent)
+(struct band-listing-struct(concertID bandID bandName date time venue cost seat) #:mutable)
 ;(struct band-listings ()
 ; Band and fan test account will be deleted
 (define test-acc(band-user-struct "Ugur" "Ersoy" "123" "123" "test" 0))
@@ -41,12 +41,9 @@
 
 
 (define (remove-from-saved id)
-  (printf "structs>remove-from> ~a\n" id)
   (cond
     ((member id fan-selected-concerts)
-     (printf "structs>remove-from2> ~a\n" id)
-     (set! fan-selected-concerts (remove id fan-selected-concerts))
-     (printf "structs>remove-from3> ~a\n" id))))
+     (set! fan-selected-concerts (remove id fan-selected-concerts)))))
 
 (define fan-selected-concerts (list "11636" "12345" "12521" "01234"))
 
@@ -78,22 +75,20 @@
      (let ((new-concert (band-listing-struct concertID bandid name date time venue cost seatleft)))
        (set! listed-concerts (cons new-concert listed-concerts))))))
 
+;set functions
 (define registration-status 0)
 
 (define (check-registration-status id radio-selection)
-  (printf "~a ~a\n" id radio-selection)
   (set! registration-status 0)
   (cond
     ((and (equal? radio-selection 0) (number? id))
      (for ([i band-list])
-       (equal? id (band-user-struct-ID i)) (set! registration-status 1) (printf "reg stat: ~a\n" registration-status)))
+       (equal? id (band-user-struct-ID i)) (set! registration-status 1)))
     ((and(equal? radio-selection 1) (number? id))
      (for ([i fan-list])
        (equal? id (fan-user-struct-ID i)) (set! registration-status 1)))
     (else (set! registration-status 1) (displayln "test\n"))))
 
-
-;set functions
 (define (set-selected-concerts tt)
   (set! fan-selected-concerts (cons tt fan-selected-concerts)))
 
@@ -152,11 +147,9 @@
       ([i listed-concerts])
     (cond
       ((and (equal? uid (band-listing-struct-concertID i)) (equal? (band-listing-struct-bandID i) id-holder))
-       (printf "Setdate2> structs>~a ~a ~a\n" uid (band-listing-struct-date i)(band-listing-struct-time i))
        (set-band-listing-struct-date! i new-date)
        (set! flag 1)
        (set-band-listing-struct-time! i new-time)
-       (printf "Setdate3> structs>~a ~a ~a \n" uid (band-listing-struct-date i)(band-listing-struct-time i))
        (message-box "Information" "Time/Date change(s) has been made!"))))
       (cond
         ((equal? flag 0) (message-box "Warning" "Concert ID and BandID mismatch")))))
@@ -167,10 +160,8 @@
       ([i listed-concerts])
     (cond
       ((and (equal? uid (band-listing-struct-concertID i)) (equal? (band-listing-struct-bandID i) id-holder))
-       (printf "Setprice2> ~a ~a\n " uid (band-listing-struct-cost i))
        (set-band-listing-struct-cost! i new-price) (set! flag 1)
-       (message-box "Information" "Price has been changed")
-      (printf "Setprice3> ~a ~a " uid (band-listing-struct-cost i)))))
+       (message-box "Information" "Price has been changed"))))
     (cond
       ((equal? flag 0)
       (message-box "Warning" "Concert ID and BandID mismatch")))))
@@ -228,6 +219,7 @@
      (equal? account-type 0) (band-user-struct-name struct-name))
     ((equal? account-type 1) (fan-user-struct-name struct-name))
     (else (displayln "Error Secret Answer not Found"))))
+
 ;cmp functions
 (define cmp-uid 0)
 (define (compare-ids uid)
