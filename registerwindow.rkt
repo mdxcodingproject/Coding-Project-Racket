@@ -23,7 +23,7 @@
                                           (create-account name surname id password user-type secret-answer)
                                           (check-registration-status id user-type)
                                           (cond
-                                           ((equal? registration-status #t)
+                                           ((equal? registration-status 1)
                                             (message-box "Warning"
                                                          (format "Account Has Been Created \nAccount ID: ~a\nAccount Type: ~a" id (send app-radio-button get-item-label (send app-radio-button get-selection)))))
                                            (else "Not registered"))
