@@ -20,5 +20,5 @@
          (cond
            ((and (equal? (get-account-id i 1) user-id) (equal? (get-account-password i 1) user-pass)) (set! flag 1) (message-box "Information" "Fan Login Successful") (set! login-status 1) (set-logged-in-acc i))))))
     (cond
-      ((equal? flag 0) (message-box "Warning" "Password/ID is wrong\n")))))
+      ((equal? flag 0) (message-box "Warning" "Password or ID is wrong\n")))))
 (provide (all-defined-out))

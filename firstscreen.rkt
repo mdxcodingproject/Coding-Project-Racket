@@ -29,9 +29,9 @@
 
 
   ;Buttons and text fields 
-  (define registration-button-main-window (new button% [label "Registration"][parent horizontal-pane-top][stretchable-width #t][stretchable-height #t][min-height 100] [min-width 100][horiz-margin (/ window-width 4)]
+  (define registration-button-main-window (new button% [label "Registration"][parent horizontal-pane-top][stretchable-width #t][min-height 100] [min-width 100][horiz-margin (/ window-width 4)]
                                                [callback (lambda (button event) (open-registration-window))]))
-  (define signin-button-main-window (new button% [label "Password Reset"][parent horizontal-pane-top][stretchable-width #t][stretchable-height #t][min-height 100][min-width 100][horiz-margin (/ window-width 4)]
+  (define signin-button-main-window (new button% [label "Password Reset"][parent horizontal-pane-top][stretchable-width #t][min-height 100][min-width 100][horiz-margin (/ window-width 4)]
                                          [callback (lambda (button event) (password-reset-screen))]))
   (define band-id-text-field (new text-field% [label ""] [parent band-group-box]))
   (define band-password-text-field (new text-field% [label ""] [parent band-group-box]))
