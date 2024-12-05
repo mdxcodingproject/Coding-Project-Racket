@@ -52,15 +52,6 @@
 
   (send/apply list-box set (list fan-band-id-list fan-band-name-list fan-date-list fan-time-list fan-venue-list fan-cost-list fan-bookStatus-list))) ; send/apply method is from stackoverflow
 
-;(define (test list-box text-field)
-;  (clear-list)
-;  (for ([i listed-concerts])
-;        (cond
-;          ((or (equal? text-field (band-listing-struct-bandName i)) (equal? text-field (band-listing-struct-date i)) (equal? text-field (band-listing-struct-time i))
-;               (equal? text-field (band-listing-struct-venue i)) (equal? text-field (band-listing-struct-cost i)) (<= (string->number text-field) (string->number (band-listing-struct-seat i))))
-;           (set-fan-list i)
-;           (send/apply list-box set (list fan-band-id-list fan-band-name-list fan-date-list fan-time-list fan-venue-list fan-cost-list fan-bookStatus-list))
-;           )))) -> this doesn't work when you search name then name. It violates the contract for seat part. Either it needs to have 2 different cond to seperate numbers and strings or seat won'T be an option.
 (define (search-fan-concert-lists list-box selected text-field)
   (clear-list)
   (cond
@@ -68,42 +59,24 @@
      (message-box "Warning" "Please select a filter option"))
     ((equal? text-field "")
      (message-box "Warning" "No concert was found")))
-  
   (cond
-    ((equal? selected "Band Name")
-     (for ([i listed-concerts])
+    ((or (equal? selected "Band Name") (equal? selected "Time") (equal? selected "Date") (equal? selected "Location"))
+     (for [(i listed-concerts)]
        (cond
-         ((equal? text-field (band-listing-struct-bandName i))
-          (set-fan-list i)
-          (send/apply list-box set (list fan-band-id-list fan-band-name-list fan-date-list fan-time-list fan-venue-list fan-cost-list fan-bookStatus-list))))))
-    ((equal? selected "Date")
-     (for ([i listed-concerts])
-       (cond
-         ((equal? text-field (band-listing-struct-date i))
-          (set-fan-list i)
-          (send/apply list-box set (list fan-band-id-list fan-band-name-list fan-date-list fan-time-list fan-venue-list fan-cost-list fan-bookStatus-list))))))
-    ((equal? selected "Time")
-     (for ([i listed-concerts])
-       (cond
-         ((equal? text-field (band-listing-struct-time i))
-          (set-fan-list i)
-          (send/apply list-box set (list fan-band-id-list fan-band-name-list fan-date-list fan-time-list fan-venue-list fan-cost-list fan-bookStatus-list))))))
-    ((equal? selected "Location")
-     (for ([i listed-concerts])
-       (cond
-         ((equal? text-field (band-listing-struct-venue i))
+         ((or (equal? text-field (band-listing-struct-bandName i)) (equal? text-field (band-listing-struct-date i)) (equal? text-field (band-listing-struct-time i))
+              (equal? text-field (band-listing-struct-venue i)))
           (set-fan-list i)
           (send/apply list-box set (list fan-band-id-list fan-band-name-list fan-date-list fan-time-list fan-venue-list fan-cost-list fan-bookStatus-list))))))
     ((equal? selected "Price")
      (for ([i listed-concerts])
        (cond
-         ((<= (string->number text-field) (string->number (band-listing-struct-cost i)))
+         ((>= (string->number text-field) (string->number (band-listing-struct-cost i)))
           (set-fan-list i)
           (send/apply list-box set (list fan-band-id-list fan-band-name-list fan-date-list fan-time-list fan-venue-list fan-cost-list fan-bookStatus-list))))))
     ((equal? selected "Seat Left")
      (for ([i listed-concerts])
        (cond
-          ((<= (string->number text-field) (string->number (band-listing-struct-seat i)))
+         ((>= (string->number (band-listing-struct-seat i)) (string->number text-field))
           (set-fan-list i)
           (send/apply list-box set (list fan-band-id-list fan-band-name-list fan-date-list fan-time-list fan-venue-list fan-cost-list fan-bookStatus-list))))))))
 
@@ -118,18 +91,18 @@
 
 
 (define (set-saved-list st-name)
-        (set! saved-bname-list (cons (band-listing-struct-bandName st-name) saved-bname-list))
-        (set! saved-date-list (cons (band-listing-struct-date st-name) saved-date-list))
-        (set! saved-time-list (cons (band-listing-struct-time st-name) saved-time-list))
-        (set! saved-venue-list (cons (band-listing-struct-venue st-name) saved-venue-list))
-        (set! saved-cost-list (cons (band-listing-struct-cost st-name) saved-cost-list))
-        (set! saved-bookStatus-list (cons (band-listing-struct-seat st-name) saved-bookStatus-list))
-        (set! saved-concert-id-list (cons (band-listing-struct-concertID st-name) saved-concert-id-list)))
+  (set! saved-bname-list (cons (band-listing-struct-bandName st-name) saved-bname-list))
+  (set! saved-date-list (cons (band-listing-struct-date st-name) saved-date-list))
+  (set! saved-time-list (cons (band-listing-struct-time st-name) saved-time-list))
+  (set! saved-venue-list (cons (band-listing-struct-venue st-name) saved-venue-list))
+  (set! saved-cost-list (cons (band-listing-struct-cost st-name) saved-cost-list))
+  (set! saved-bookStatus-list (cons (band-listing-struct-seat st-name) saved-bookStatus-list))
+  (set! saved-concert-id-list (cons (band-listing-struct-concertID st-name) saved-concert-id-list)))
 
 
 (define (saved-concerts)
   (define (append-to-saved-lb)
-      (clear-saved-list)
+    (clear-saved-list)
     (for ([i listed-concerts])
       (cond
         ((list? (member (band-listing-struct-concertID i) fan-selected-concerts))
@@ -178,9 +151,12 @@
 
      (define search "")
      (define search-combo-field (new combo-field% [parent left-vert-pane] [label "Filter"] [choices (list "Band Name" "Date" "Time" "Location" "Price" "Seat Left")]
-                             [callback
-                              (lambda (combo event)
-                                (set! search (send search-combo-field get-value)))]))
+                                     [callback
+                                      (lambda (combo event)
+                                        (set! search (send search-combo-field get-value)))]))
+     ;(cond
+     ;  ((or (equal? "Date" search) (equal? "Time" search) (equal? "Band Name" search) (equal? "Location" search) (equal? "Price" search) (equal? "Seat Left" search))
+     ;   (set! search "String")
      (define search-text-field (new text-field% [parent left-vert-pane] [label "Search"]))
 
 
@@ -188,7 +164,7 @@
                                 [callback (lambda (button event)
                                             (let* ([search-textf (send search-text-field get-value)])
                                               (search-fan-concert-lists fan-listing-lb search search-textf)
-                                              ;(test fan-listing-lb search-textf)
+                                              ;(test fan-listing-lb "Number" search-textf)
                                               ))]))
      
      (define refresh-button (new button% [parent right-vert-hori-pane] [label "Refresh"] [min-width 100] [min-height 100]
