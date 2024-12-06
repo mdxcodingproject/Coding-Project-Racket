@@ -70,13 +70,13 @@
     ((equal? selected "Price")
      (for ([i listed-concerts])
        (cond
-         ((>= (string->number text-field) (string->number (band-listing-struct-cost i)))
+         ((and (>= (string->number text-field) (string->number (band-listing-struct-cost i))) (not (equal? (string->number (band-listing-struct-cost i)) 0)))
           (set-fan-list i)
           (send/apply list-box set (list fan-band-id-list fan-band-name-list fan-date-list fan-time-list fan-venue-list fan-cost-list fan-bookStatus-list))))))
     ((equal? selected "Seat Left")
      (for ([i listed-concerts])
        (cond
-         ((>= (string->number (band-listing-struct-seat i)) (string->number text-field))
+         ((and (>= (string->number (band-listing-struct-seat i)) (string->number text-field)) (not (equal? (string->number (band-listing-struct-seat i)) 0)))
           (set-fan-list i)
           (send/apply list-box set (list fan-band-id-list fan-band-name-list fan-date-list fan-time-list fan-venue-list fan-cost-list fan-bookStatus-list))))))))
 
