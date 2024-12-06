@@ -1,7 +1,7 @@
 #lang racket/gui
 (require "structs.rkt")
 (require "editdetails.rkt")
-(require gregor)
+;(require gregor)
 (define band-screen 0)
 (define listing-screen 0)
 
@@ -100,7 +100,7 @@
      (define band-id-message(new message% (parent top-left)[enabled #f] (label (format "Band ID: ~a Band Name: ~a" id-holder name-holder)) [min-width 200] [min-height 0] [font (make-object font%)]))
      
      (define top-right (new panel% [parent listings-ver-top-right]))
-     (define message (new message% [parent top-right] [label (date->iso8601 (today/utc))] [font (make-object font%)]))
+     ;(define message (new message% [parent top-right] [label (date->iso8601 (today/utc))] [font (make-object font%)]))
      
      (define bot-right (new group-box-panel% [parent listings-ver-bot-right] [label ""]))
      
