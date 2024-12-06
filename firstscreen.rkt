@@ -10,7 +10,6 @@
 (define window-height 400)
 
 
-
 (define (first-screen)
   (define main-window-screen-frame (new frame% [label "Concert App"] [width window-width] [height window-height]))
   (define horizontal-pane-top (new horizontal-pane% [parent main-window-screen-frame]))
