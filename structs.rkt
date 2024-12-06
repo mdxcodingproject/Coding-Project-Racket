@@ -73,6 +73,9 @@
     ((and bandid name date time venue cost seatleft)
      (set! concertID (number->string (generate-random-uid)))
      (let ((new-concert (band-listing-struct concertID bandid name date time venue cost seatleft)))
+       (printf "structs>create-concert-listing> ~a ~a ~a ~a ~a ~a ~a\n" bandid name date time venue cost seatleft)
+       (printf "structs>create-concert-listing> ~a ~a ~a ~a ~a ~a ~a\n" (band-listing-struct-bandID new-concert) (band-listing-struct-bandName new-concert) (band-listing-struct-date new-concert)
+               (band-listing-struct-time new-concert) (band-listing-struct-cost new-concert) (band-listing-struct-venue new-concert) (band-listing-struct-seat new-concert))
        (set! listed-concerts (cons new-concert listed-concerts))))))
 
 ;set functions
@@ -111,11 +114,12 @@
       ([i listed-concerts])
     (cond
       ((and (equal? uid (band-listing-struct-concertID i)) (equal? (band-listing-struct-bandID i) id-holder))
-       (set-band-listing-struct-seat! i "CANCELLED")
-       (set-band-listing-struct-cost! i "CANCELLED")
+       (set-band-listing-struct-seat! i "0")
+       (set-band-listing-struct-cost! i "0")
        (set-band-listing-struct-venue! i "CANCELLED")
        (set-band-listing-struct-date! i "CANCELLED")
        (set-band-listing-struct-time! i "CANCELLED")
+       (set-band-listing-struct-concertID! i "CANCELLED")
        (set! flag 1)
        (message-box "Information" "Concert has been cancelled!"))))
     (cond
