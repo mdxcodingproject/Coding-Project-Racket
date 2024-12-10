@@ -90,9 +90,10 @@
      (for ([i fan-list])
        (equal? id (fan-user-struct-ID i)) (set! registration-status 1)))
     (else (set! registration-status 1) (displayln "test\n"))))
-
+(define selected-concert-status 0)
 (define (set-selected-concerts tt)
-  (set! fan-selected-concerts (cons tt fan-selected-concerts)))
+  (set selected-concert-status 0)
+  (set! fan-selected-concerts (cons tt fan-selected-concerts)) (set! selected-concert-status 1))
 
 (define (set-seat uid new-seat)
   (for
