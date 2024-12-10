@@ -52,10 +52,9 @@
 
 
 ;create functions
-(define (generate-random-uid)
-  
-  (random-seed (random 100000)) 
-  (define rand-uid (random 1000000))
+(define (generate-random-uid) ;
+  (random-seed (random 100000)) ; -> random-seed is from GPT,
+  (define rand-uid (random 1000000)) ; stackoverflow https://stackoverflow.com/questions/51987116/random-numbers-in-racket
   rand-uid)
 
 (define (create-account name surname id password radiobutton secret-answer)

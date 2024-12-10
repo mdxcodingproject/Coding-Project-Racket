@@ -5,7 +5,8 @@
   (define app-radio-button (new radio-box% [parent new-window] [label ""] [choices (list "Band" "Fan")]))
 
   ;name - surname - id - password text-fields
-  (define user-id-field (new text-field% [parent new-window][label "ID"]))
+  (define user-id-field (new text-field% [parent new-window][enabled #f][label "ID"]))
+  (send user-id-field set-value  (number->string (generate-random-uid)))
   (define user-name-field (new text-field% [parent new-window][label "Name"]))
   (define user-surname-field (new text-field% [parent new-window][label "Surname"]))
   (define user-password-field (new text-field% [parent new-window][label "Password"]))
