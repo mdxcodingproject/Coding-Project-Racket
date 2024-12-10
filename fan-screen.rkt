@@ -175,7 +175,7 @@
      (define get-concert-id (new text-field% [parent right-vert-pane-hori-pane] [label "Concert ID"]))
      (define save-concert-button (new button% [parent right-vert-pane-hori-pane] [label "Save"] [min-width 200] [min-height 100]
                                       [callback (lambda (button event)
-                                                  (set-selected-concerts (send get-concert-id get-value)))]))
+                                                  (set-selected-concerts (send get-concert-id get-value)) (message-box "Information" (format "Concert ~a Has Been Saved" (send get-concert-id get-value))))]))
      (update-fan-concert-lists fan-listing-lb)
      (send fan-listing-lb set-column-width 0 100 100 300)
      (send fan-listing-lb set-column-width 1 100 100 300)
