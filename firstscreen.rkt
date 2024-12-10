@@ -15,10 +15,10 @@
   (define horizontal-pane-top (new horizontal-pane% [parent main-window-screen-frame]))
   (define horizontal-pane-bottom (new horizontal-pane% [parent main-window-screen-frame]))
   
-  (define icon (make-object bitmap% "icon.png" 'png)) ; GPT
+  (define icon (make-object bitmap% "icon.png" 'png)) ; ICON part is GPT
   (cond
     ((send icon ok?)
-      (send main-window-screen-frame set-icon icon))) ; GPT
+      (send main-window-screen-frame set-icon icon)))
 
   ;pane and group-box for fan and band
   (define vertical-pane-band (new vertical-pane% [parent horizontal-pane-bottom]))
