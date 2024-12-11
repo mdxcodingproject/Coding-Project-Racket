@@ -47,7 +47,7 @@
 
 (define fan-selected-concerts (list "11636" "12345" "12521" "01234"))
 
-; creates account by invoking band or fan struct. As list isn't mutable it creates a new list and assigns it to our band or fan-list variable.
+; creates account by invoking band or fan struct. It creates a new list and assigns it to our band or fan-list variable.
 ; after it is only read-only but you can change what its pointing at (const char list[2]); -> read-only (const char const idf) -> read only + idf cannot hold a different var
 
 
@@ -110,7 +110,7 @@
         (message-box "Information" "Seat List has been updated!")))))))
 (define (cancel-concert uid)
   (let ([flag 0])
-  (for
+    (for 
       ([i listed-concerts])
     (cond
       ((and (equal? uid (band-listing-struct-concertID i)) (equal? (band-listing-struct-bandID i) id-holder))
