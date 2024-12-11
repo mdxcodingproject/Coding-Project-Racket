@@ -58,24 +58,23 @@
     ((equal? selected "")
      (message-box "Warning" "Please select a filter option"))
     ;((equal? text-field "")
-     ;(update-fan-concert-lists fan-listing-lb)) 
+    ;(update-fan-concert-lists fan-listing-lb)) 
     )
-  (cond
-    ((or (equal? selected "Band Name") (equal? selected "Time") (equal? selected "Date") (equal? selected "Location"))
-     (for [(i listed-concerts)]
+
+  (for [(i listed-concerts)]
+    (cond
+      ((or (equal? selected "Band Name") (equal? selected "Time") (equal? selected "Date") (equal? selected "Location"))
        (cond
          ((or (equal? text-field (band-listing-struct-bandName i)) (equal? text-field (band-listing-struct-date i)) (equal? text-field (band-listing-struct-time i))
               (equal? text-field (band-listing-struct-venue i)))
           (set-fan-list i)
-          (send/apply list-box set (list fan-band-id-list fan-band-name-list fan-date-list fan-time-list fan-venue-list fan-cost-list fan-bookStatus-list))))))
-    ((and (string->number text-field) (equal? selected "Price")) 
-     (for ([i listed-concerts])
+          (send/apply list-box set (list fan-band-id-list fan-band-name-list fan-date-list fan-time-list fan-venue-list fan-cost-list fan-bookStatus-list)))))
+      ((and (string->number text-field) (equal? selected "Price"))
        (cond
          ((and (>= (string->number text-field) (string->number (band-listing-struct-cost i))) (not (equal? (string->number (band-listing-struct-cost i)) 0)))
           (set-fan-list i)
-          (send/apply list-box set (list fan-band-id-list fan-band-name-list fan-date-list fan-time-list fan-venue-list fan-cost-list fan-bookStatus-list))))))
-    ((and (equal? selected "Seat Left") (number? (string->number text-field)))
-     (for ([i listed-concerts])
+          (send/apply list-box set (list fan-band-id-list fan-band-name-list fan-date-list fan-time-list fan-venue-list fan-cost-list fan-bookStatus-list)))))
+      ((and (equal? selected "Seat Left") (number? (string->number text-field)))
        (cond
          ((and (>= (string->number (band-listing-struct-seat i)) (string->number text-field)) (not (equal? (string->number (band-listing-struct-seat i)) 0)))
           (set-fan-list i)
