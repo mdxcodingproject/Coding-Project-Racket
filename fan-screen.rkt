@@ -165,20 +165,20 @@
                                                 (search-fan-concert-lists fan-listing-lb searchcf searchtf))]))
 
 
-     (define search-button (new button% [parent right-vert-hori-pane][enabled #f][label "Search"] [min-width 100] [min-height 100]
+     (define search-button (new button% [parent right-vert-hori-pane][enabled #f][label "Search"][stretchable-width #t][stretchable-height #t] [min-width 100] [min-height 100]
                                 [callback (lambda (button event)
                                             (let* ([search-textf (send search-text-field get-value)])
                                               (search-fan-concert-lists fan-listing-lb searchcf search-textf)
                                               ;(test fan-listing-lb "Number" search-textf)
                                               ))]))
      
-     (define refresh-button (new button% [parent right-vert-hori-pane] [label "Refresh"] [min-width 100] [min-height 100]
+     (define refresh-button (new button% [parent right-vert-hori-pane] [label "Refresh"][stretchable-width #t][stretchable-height #t] [min-width 100] [min-height 100]
                                  [callback (lambda (button event)
                                              (update-fan-concert-lists fan-listing-lb))]))
      
      (define right-vert-pane-hori-pane (new vertical-pane% [parent right-vert-hori-pane]))
      (define get-concert-id (new text-field% [parent right-vert-pane-hori-pane] [label "Concert ID"]))
-     (define save-concert-button (new button% [parent right-vert-pane-hori-pane] [label "Save"] [min-width 200] [min-height 100]
+     (define save-concert-button (new button% [parent right-vert-pane-hori-pane] [label "Save"][stretchable-width #t][stretchable-height #t] [min-width 200] [min-height 100]
                                       [callback (lambda (button event)
                                                   (set-selected-concerts (send get-concert-id get-value)) (message-box "Information" (format "Concert ~a Has Been Saved" (send get-concert-id get-value))))]))
      (update-fan-concert-lists fan-listing-lb)
