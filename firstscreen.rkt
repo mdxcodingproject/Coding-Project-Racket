@@ -1,7 +1,6 @@
 #lang racket/gui
 (require "registerwindow.rkt")
 (require "login.rkt")
-(require "clear-screen.rkt")
 (require "passwordreset.rkt")
 (require "band-login-screen.rkt")
 (require "fan-screen.rkt")
