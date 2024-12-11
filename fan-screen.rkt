@@ -57,8 +57,9 @@
   (cond
     ((equal? selected "")
      (message-box "Warning" "Please select a filter option"))
-    ((equal? text-field "")
-     (message-box "Warning" "No concert was found")))
+    ;((equal? text-field "")
+     ;(update-fan-concert-lists fan-listing-lb)) 
+    )
   (cond
     ((or (equal? selected "Band Name") (equal? selected "Time") (equal? selected "Date") (equal? selected "Location"))
      (for [(i listed-concerts)]
@@ -67,18 +68,19 @@
               (equal? text-field (band-listing-struct-venue i)))
           (set-fan-list i)
           (send/apply list-box set (list fan-band-id-list fan-band-name-list fan-date-list fan-time-list fan-venue-list fan-cost-list fan-bookStatus-list))))))
-    ((equal? selected "Price")
+    ((and (string->number text-field) (equal? selected "Price")) 
      (for ([i listed-concerts])
        (cond
          ((and (>= (string->number text-field) (string->number (band-listing-struct-cost i))) (not (equal? (string->number (band-listing-struct-cost i)) 0)))
           (set-fan-list i)
           (send/apply list-box set (list fan-band-id-list fan-band-name-list fan-date-list fan-time-list fan-venue-list fan-cost-list fan-bookStatus-list))))))
-    ((equal? selected "Seat Left")
+    ((and (equal? selected "Seat Left") (number? (string->number text-field)))
      (for ([i listed-concerts])
        (cond
          ((and (>= (string->number (band-listing-struct-seat i)) (string->number text-field)) (not (equal? (string->number (band-listing-struct-seat i)) 0)))
           (set-fan-list i)
           (send/apply list-box set (list fan-band-id-list fan-band-name-list fan-date-list fan-time-list fan-venue-list fan-cost-list fan-bookStatus-list))))))))
+
 
 (define (clear-saved-list)
   (set! saved-bname-list (list)) ; GPT -> to clean my list box in order to not copy same concerts over and over again
@@ -149,21 +151,25 @@
      (define right-vert-pane (new vertical-pane% [parent hori-bot-pane]))
      (define right-vert-hori-pane (new horizontal-pane% [parent right-vert-pane]))
 
-     (define search "")
+     (define searchcf "")
+     (define searchtf "")
      (define search-combo-field (new combo-field% [parent left-vert-pane] [label "Filter"] [choices (list "Band Name" "Date" "Time" "Location" "Price" "Seat Left")]
                                      [callback
                                       (lambda (combo event)
-                                        (set! search (send search-combo-field get-value)))]))
+                                          (set! searchcf (send search-combo-field get-value)))]))
      ;(cond
      ;  ((or (equal? "Date" search) (equal? "Time" search) (equal? "Band Name" search) (equal? "Location" search) (equal? "Price" search) (equal? "Seat Left" search))
      ;   (set! search "String")
-     (define search-text-field (new text-field% [parent left-vert-pane] [label "Search"]))
+     (define search-text-field (new text-field% [parent left-vert-pane] [label "Search"]
+                                    [callback (lambda (tf event)
+                                                (set! searchtf (send search-text-field get-value))
+                                                (search-fan-concert-lists fan-listing-lb searchcf searchtf))]))
 
 
-     (define search-button (new button% [parent right-vert-hori-pane] [label "Search"] [min-width 100] [min-height 100]
+     (define search-button (new button% [parent right-vert-hori-pane][enabled #f][label "Search"] [min-width 100] [min-height 100]
                                 [callback (lambda (button event)
                                             (let* ([search-textf (send search-text-field get-value)])
-                                              (search-fan-concert-lists fan-listing-lb search search-textf)
+                                              (search-fan-concert-lists fan-listing-lb searchcf search-textf)
                                               ;(test fan-listing-lb "Number" search-textf)
                                               ))]))
      
