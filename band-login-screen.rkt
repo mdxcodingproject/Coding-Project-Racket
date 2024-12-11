@@ -53,7 +53,7 @@
                                        bookStatus-list))
          
 ;main frame
-(define (band-show-listings); is being implemented
+(define (band-show-listings)
   (cond
     ((eq? listing-screen 1)
      (define listing-dashboard (new frame% [label "Show Listing"] [width 900] [height 400])) ; thanks to the guy who gave me the idea how to use listbox from stackoverflow
