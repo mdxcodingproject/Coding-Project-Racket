@@ -72,9 +72,6 @@
     ((and bandid name date time venue cost seatleft)
      (set! concertID (number->string (generate-random-uid)))
      (let ((new-concert (band-listing-struct concertID bandid name date time venue cost seatleft)))
-       (printf "structs>create-concert-listing> ~a ~a ~a ~a ~a ~a ~a\n" bandid name date time venue cost seatleft)
-       (printf "structs>create-concert-listing> ~a ~a ~a ~a ~a ~a ~a\n" (band-listing-struct-bandID new-concert) (band-listing-struct-bandName new-concert) (band-listing-struct-date new-concert)
-               (band-listing-struct-time new-concert) (band-listing-struct-cost new-concert) (band-listing-struct-venue new-concert) (band-listing-struct-seat new-concert))
        (set! listed-concerts (cons new-concert listed-concerts))))))
 
 ;set functions
@@ -96,6 +93,7 @@
   (set! fan-selected-concerts (cons tt fan-selected-concerts)) (set! selected-concert-status 1))
 
 (define (set-seat uid new-seat)
+  (let [(flag 0)]
   (for
       ([i listed-concerts])
     (cond
@@ -103,11 +101,12 @@
        (printf "SeatLeft>struct> ~a ~a ~a\n" uid new-seat (band-listing-struct-seat i))
        (cond
          ((equal? (string->number new-seat) 0)
-       (set-band-listing-struct-seat!  i "FULLY BOOKED")
+       (set-band-listing-struct-seat!  i "FULLY BOOKED") (set! flag 1)
        (message-box "Information" "Seat List has been updated!"))
        (else
-        {set-band-listing-struct-seat! i new-seat}
-        (message-box "Information" "Seat List has been updated!")))))))
+        {set-band-listing-struct-seat! i new-seat} (set! flag 1)
+        (message-box "Information" "Seat List has been updated!"))))
+      (else (cond ((equal? flag 0) (set! flag 1) (message-box "Warning" "Concert ID and BandID mismatch"))))))))
 (define (cancel-concert uid)
   (let ([flag 0])
     (for 
@@ -124,7 +123,7 @@
        (message-box "Information" "Concert has been cancelled!"))))
     (cond
       ((equal? flag 0)
-       (message-box "Warning" "Concert UID is wrong or empty!")))))
+       (message-box "Warning" "Concert ID and BandID mismatch")))))
 
 
 (define (set-account-password userid new-pass acc-type)
