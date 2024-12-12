@@ -1,7 +1,6 @@
 #lang racket/gui
 (require "structs.rkt")
 (require "editdetails.rkt")
-;(require gregor)
 (define band-screen 0)
 (define listing-screen 0)
 
